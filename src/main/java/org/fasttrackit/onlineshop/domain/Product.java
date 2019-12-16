@@ -27,6 +27,7 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     private Set<Cart> carts = new HashSet<>();
 
+
     public Double getPrice() {
         return price;
     }

@@ -1,5 +1,6 @@
 package org.fasttrackit.onlineshop.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fasttrackit.onlineshop.domain.Product;
 import org.fasttrackit.onlineshop.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshop.persistance.ProductRepository;
@@ -23,18 +24,23 @@ public class ProductService {
 
     //Dependency injection
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ObjectMapper objectMapper) {
         this.productRepository = productRepository;
+        this.objectMapper = objectMapper;
     }
+
+    private final ObjectMapper objectMapper;
 
     public Product createProduct(SaveProductRequest request) {
         LOGGER.info("Creating product {}", request);
-        Product product = new Product();
-        product.setDescription(request.getDescription());
-        product.setName(request.getName());
-        product.setPrice(request.getPrice());
-        product.setImageUrl(request.getImageUrl());
-        product.setQuantity(request.getQuantity());
+        Product product = objectMapper.convertValue(request, Product.class);
+
+//        Product product = new Product();
+////        product.setDescription(request.getDescription());
+////        product.setName(request.getName());
+////        product.setPrice(request.getPrice());
+////        product.setImageUrl(request.getImageUrl());
+////        product.setQuantity(request.getQuantity());
         return productRepository.save(product);
 
     }
